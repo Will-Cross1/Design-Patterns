@@ -37,7 +37,7 @@ class ThirdPartyAVI:
     def open_container(self, filename):
         print(f"AVI Opening AVI container: {filename}")
     
-    def load_subtitle_file(self, API):
+    def load_subtitle_file_from_api(self, API):
         print(f"AVI Loading subtitles from: {API}")
 
     def render_frames(self):
@@ -65,7 +65,7 @@ class MP3Adapter(MediaDecoder):
 
     def play(self, file_path, subtitles=None, time_delay=0):
         # Translates the play() call to the MP3 library's specific calls.
-        # subtitles and time_delay are ignored since MP3 doesn't support them, but they are included in the method signature to match the MediaDecoder interface
+        # subtitles and time_delay are ignored since MP3 doesn't support them, but they are included to match the MediaDecoder interface
         self.mp3.load_track(file_path)
         self.mp3.play_audio()
 
@@ -76,6 +76,7 @@ class MP4Adapter(MediaDecoder):
 
     def play(self, file_path, subtitles=None, time_delay=0):
         # Translates the play() call to the MP4 library's specific calls.
+        # This library uses each parameter, so they are used as needed.
         self.mp4.load_video(file_path)
         
         if subtitles is not None:
@@ -95,12 +96,13 @@ class AVIAdapter(MediaDecoder):
         self.avi.open_container(file_path)
         
         if subtitles is not None:
-            self.avi.load_subtitle_file(subtitles)
+            self.avi.load_subtitle_file_from_api(subtitles)
 
         self.avi.render_frames()
 
 
 class OGGAdapter(MediaDecoder):
+    # Demonstration of how not implemented adapters can work.
     def __init__(self):
         # placeholder for future OGG third party library
         pass
