@@ -1,35 +1,47 @@
-# Strategy design pattern
-
+# Strategy interface
 class PaymentStrategy:
     """
     The strategy interface
     Has the method that all strategies must implement
-    The pay method uses an amount parameter, which is the total cost of all items in teh basket
     """
     def pay(self, amount):
         pass
 
 # The strategies for this design pattern. One for each payment method
 class CardPayment(PaymentStrategy):
+    """
+    The Card payment strategy.
+    This would have Card processing logic, but for this example, it just uses prints.
+    """
     def pay(self, amount):
         print("Processing card details...")
-        print("Card payment:", amount)
+        print(f"Card payment: £{amount}")
 
 class PayPalPayment(PaymentStrategy):
+    """
+    The PayPal payment strategy.
+    This would have PayPal processing logic, but for this example, it just uses prints.
+    """
     def pay(self, amount):
         print("Connecting to PayPal servers...")
-        print("PayPal payment:", amount)
+        print(f"PayPal payment: £{amount}")
 
 class CryptoPayment(PaymentStrategy):
+    """
+    The Crypto payment strategy.
+    This would have Crypto processing logic, but for this example, it just uses prints.
+    """
     def pay(self, amount):
         print("initialising blockchain...")
         print("Routing through dark web...")
-        print("Crypto payment:", amount)
+        print(f"Crypto payment: £{amount}")
 
 
+# The context class that holds the current strategy and delegates checkout to it.
 class Basket:
     """
-    The context class that uses the strategy.
+    Context class.
+    Holds the current payment strategy and delegates checkout to it.
     This is what the user interacts with.
     """
     def __init__(self, amount):
@@ -37,15 +49,19 @@ class Basket:
         self.payment_strategy = None  # No strategy selected yet
 
     def set_payment_method(self, strategy):
+        # Used to select Basket's payment strategy
         self.payment_strategy = strategy
 
     def checkout(self):
+        # Executes the strategy's payment method
         if not self.payment_strategy:
             print("Please select a payment method first!")
             raise ValueError("No payment method selected")
         self.payment_strategy.pay(self.amount)
-    
-    
+
+
+# Each time the user changes payment method, set_payment_method is called to change strategy.
+# Below (in user_examples()) are examples only, in a real application, each function call would come from the UI directly and would not be hardcoded
 def user_examples():
     # The user selects card payment, but forgot their card, so switches to PayPal.
     print(" Card to PayPal test:")
